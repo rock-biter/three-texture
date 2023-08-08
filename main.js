@@ -27,6 +27,7 @@ const material = new THREE.MeshStandardMaterial({
 	displacementMap,
 	displacementScale: 0.05,
 	normalMap,
+	normalScale: new THREE.Vector2(1, -1),
 	aoMap,
 	aoMapIntensity: 1,
 })
@@ -46,7 +47,7 @@ mesh.position.x = -1
 scene.add(mesh)
 
 const planeGeometry = new THREE.PlaneGeometry(1.5, 1.5, 10, 10)
-const planeMaterial = new THREE.MeshStandardMaterial({ map })
+const planeMaterial = new THREE.MeshStandardMaterial({ map: aoMap })
 const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 plane.position.x = 1
 scene.add(plane)
@@ -56,6 +57,8 @@ light.position.set(5, 5, 10)
 scene.add(light)
 const aLinght = new THREE.AmbientLight(0xffffff, 0.25)
 scene.add(aLinght)
+// const emLight = new THREE.HemisphereLight(0xffffff, 0x55ff55, 0.2)
+// scene.add(emLight)
 
 /**
  * render sizes
