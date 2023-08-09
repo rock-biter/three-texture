@@ -1,7 +1,8 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import mapSrc from './src/textures/stone-wall-001/Stone_Wall_001_COLOR.jpg'
+// import mapSrc from './src/textures/stone-wall-001/Stone_Wall_001_COLOR.jpg'
+import mapSrc from './src/textures/terra.png'
 import normalMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_NRM.jpg'
 import dispMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_DISP.jpg'
 import aoMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_OCC.jpg'
@@ -15,6 +16,16 @@ const textureLoader = new THREE.TextureLoader(manager)
 const scene = new THREE.Scene()
 
 const map = textureLoader.load(mapSrc)
+// map.repeat.set(2, 3)
+// map.wrapS = THREE.RepeatWrapping
+// map.wrapT = THREE.RepeatWrapping
+// map.offset.set(-0.5, -1)
+// map.rotation = Math.PI * 0.15
+// map.center.x = 0.5
+// map.center.y = 0.5
+// map.minFilter = THREE.NearestFilter
+map.magFilter = THREE.NearestFilter
+
 const normalMap = textureLoader.load(normalMapSrc)
 const displacementMap = textureLoader.load(dispMapSrc)
 const aoMap = textureLoader.load(aoMapSrc)
@@ -24,12 +35,12 @@ const aoMap = textureLoader.load(aoMapSrc)
  */
 const material = new THREE.MeshStandardMaterial({
 	map,
-	displacementMap,
-	displacementScale: 0.05,
-	normalMap,
-	normalScale: new THREE.Vector2(1, -1),
-	aoMap,
-	aoMapIntensity: 1,
+	// displacementMap,
+	// displacementScale: 0.05,
+	// normalMap,
+	// normalScale: new THREE.Vector2(1, -1),
+	// aoMap,
+	// aoMapIntensity: 1,
 })
 
 material.onBeforeCompile = (shader) => {
@@ -37,7 +48,8 @@ material.onBeforeCompile = (shader) => {
 	console.log(shader.fragmentShader)
 }
 
-const geometry = new THREE.SphereGeometry(0.75, 90, 90)
+// const geometry = new THREE.SphereGeometry(0.75, 90, 90)
+const geometry = new THREE.BoxGeometry(1.25, 1.25, 1.25)
 geometry.attributes.uv2 = geometry.attributes.uv
 geometry.needsUpdate = true
 
@@ -47,7 +59,7 @@ mesh.position.x = -1
 scene.add(mesh)
 
 const planeGeometry = new THREE.PlaneGeometry(1.5, 1.5, 10, 10)
-const planeMaterial = new THREE.MeshStandardMaterial({ map: aoMap })
+const planeMaterial = new THREE.MeshStandardMaterial({ map })
 const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 plane.position.x = 1
 scene.add(plane)
