@@ -1,73 +1,99 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import mapSrc from './src/textures/giangi/giangi-02.png'
 // import mapSrc from './src/textures/stone-wall-001/Stone_Wall_001_COLOR.jpg'
-import mapSrc from './src/textures/terra.png'
-import normalMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_NRM.jpg'
-import dispMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_DISP.jpg'
-import aoMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_OCC.jpg'
-
-const manager = new THREE.LoadingManager()
-const textureLoader = new THREE.TextureLoader(manager)
+// import dispSrc from './src/textures/stone-wall-001/Stone_Wall_001_DISP.jpg'
+// import normSrc from './src/textures/stone-wall-001/Stone_Wall_001_NRM.jpg'
+// import aoSrc from './src/textures/stone-wall-001/Stone_Wall_001_OCC.jpg'
 
 /**
  * Scene
  */
 const scene = new THREE.Scene()
 
-const map = textureLoader.load(mapSrc)
-// map.repeat.set(2, 3)
-// map.wrapS = THREE.RepeatWrapping
-// map.wrapT = THREE.RepeatWrapping
-// map.offset.set(-0.5, -1)
-// map.rotation = Math.PI * 0.15
-// map.center.x = 0.5
-// map.center.y = 0.5
-// map.minFilter = THREE.NearestFilter
-map.magFilter = THREE.NearestFilter
+/**
+ * Textures
+ */
+const loadingManager = new THREE.LoadingManager()
+loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
+	console.log('caricamento iniziato')
+}
+loadingManager.onLoad = () => {
+	console.log('caricamento completato')
+}
+loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+	console.log(
+		'caricamento in corso:' + Math.ceil((100 * itemsLoaded) / itemsTotal) + '% '
+	)
+}
+loadingManager.onError = (url) => {
+	console.log('carcamento fallito')
+}
 
-const normalMap = textureLoader.load(normalMapSrc)
-const displacementMap = textureLoader.load(dispMapSrc)
-const aoMap = textureLoader.load(aoMapSrc)
+const textureLoader = new THREE.TextureLoader(loadingManager)
+const map = textureLoader.load(mapSrc)
+// const disp = textureLoader.load(dispSrc)
+// const normal = textureLoader.load(normSrc)
+// const ao = textureLoader.load(aoSrc)
+
+// const img = new Image()
+// const map = new THREE.Texture(img)
+// img.onload = () => {
+// 	map.needsUpdate = true
+// 	console.log(map)
+// }
+
+// img.src = mapSrc
 
 /**
- * Manhattan
+ * Objects
  */
 const material = new THREE.MeshStandardMaterial({
-	map,
-	// displacementMap,
+	map: map,
+	// transparent: true,
+	// normalMap: normal,
+	// normalScale: new THREE.Vector2(0.85, -0.85),
+	// displacementMap: disp,
 	// displacementScale: 0.05,
-	// normalMap,
-	// normalScale: new THREE.Vector2(1, -1),
-	// aoMap,
+	// aoMap: ao,
 	// aoMapIntensity: 1,
 })
 
-material.onBeforeCompile = (shader) => {
-	console.log(shader.vertexShader)
-	console.log(shader.fragmentShader)
-}
+// map.repeat.x = 2
+// map.repeat.y = 2
+// map.center.x = 0.5
+// map.center.y = 0.5
 
-// const geometry = new THREE.SphereGeometry(0.75, 90, 90)
-const geometry = new THREE.BoxGeometry(1.25, 1.25, 1.25)
+// const geometry = new THREE.SphereGeometry(0.75, 500, 500)
+// const geometry = new THREE.PlaneGeometry(1.5, 1.5, 300, 300)
+const geometry = new THREE.BoxGeometry(1.25, 1.25, 1.25, 300, 300, 300)
 geometry.attributes.uv2 = geometry.attributes.uv
 geometry.needsUpdate = true
 
-console.log(geometry)
 const mesh = new THREE.Mesh(geometry, material)
-mesh.position.x = -1
-scene.add(mesh)
+// mesh.position.x = -1
+const mesh2 = mesh.clone()
+const mesh3 = mesh.clone()
+
+mesh2.position.set(2, 1, -2)
+// mesh2.rotation.x = 0.5
+mesh2.rotation.z = Math.PI * 0.25
+mesh3.rotation.y = Math.PI * 0.25
+mesh3.position.set(-2, 0.5, -1)
+
+scene.add(mesh, mesh2, mesh3)
 
 const planeGeometry = new THREE.PlaneGeometry(1.5, 1.5, 10, 10)
-const planeMaterial = new THREE.MeshStandardMaterial({ map })
+const planeMaterial = new THREE.MeshStandardMaterial({ map: map })
 const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 plane.position.x = 1
-scene.add(plane)
+// scene.add(plane)
 
-const light = new THREE.DirectionalLight(0xffffff, 0.75)
+const light = new THREE.DirectionalLight(0xffffff, 1)
 light.position.set(5, 5, 10)
 scene.add(light)
-const aLinght = new THREE.AmbientLight(0xffffff, 0.25)
+const aLinght = new THREE.AmbientLight(0xffffff, 0.5)
 scene.add(aLinght)
 // const emLight = new THREE.HemisphereLight(0xffffff, 0x55ff55, 0.2)
 // scene.add(emLight)
@@ -150,3 +176,5 @@ function handleResize() {
 	const pixelRatio = Math.min(window.devicePixelRatio, 2)
 	renderer.setPixelRatio(pixelRatio)
 }
+
+scene.background = new THREE.Color(0x000652)
