@@ -60,10 +60,13 @@ const material = new THREE.MeshStandardMaterial({
 	// aoMapIntensity: 1,
 })
 
-// map.repeat.x = 2
-// map.repeat.y = 2
-// map.center.x = 0.5
-// map.center.y = 0.5
+map.repeat.x = 4
+map.repeat.y = 4
+map.rotation = Math.PI * 0.25
+map.center.x = 0.5
+map.center.y = 0.5
+map.wrapS = THREE.RepeatWrapping
+map.wrapT = THREE.RepeatWrapping
 
 // const geometry = new THREE.SphereGeometry(0.75, 500, 500)
 // const geometry = new THREE.PlaneGeometry(1.5, 1.5, 300, 300)
