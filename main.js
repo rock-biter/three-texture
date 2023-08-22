@@ -1,11 +1,11 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-// import mapSrc from './src/textures/stone-wall-001/Stone_Wall_001_COLOR.jpg'
 import mapSrc from './src/textures/terra.png'
-import normalMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_NRM.jpg'
-import dispMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_DISP.jpg'
-import aoMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_OCC.jpg'
+// import mapSrc from './src/textures/stone-wall-001/Stone_Wall_001_COLOR.jpg'
+// import normalMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_NRM.jpg'
+// import dispMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_DISP.jpg'
+// import aoMapSrc from './src/textures/stone-wall-001/Stone_Wall_001_OCC.jpg'
 
 const manager = new THREE.LoadingManager()
 const textureLoader = new THREE.TextureLoader(manager)
@@ -16,19 +16,18 @@ const textureLoader = new THREE.TextureLoader(manager)
 const scene = new THREE.Scene()
 
 const map = textureLoader.load(mapSrc)
-// map.repeat.set(2, 3)
-// map.wrapS = THREE.RepeatWrapping
-// map.wrapT = THREE.RepeatWrapping
-// map.offset.set(-0.5, -1)
-// map.rotation = Math.PI * 0.15
-// map.center.x = 0.5
-// map.center.y = 0.5
 // map.minFilter = THREE.NearestFilter
 map.magFilter = THREE.NearestFilter
-
-const normalMap = textureLoader.load(normalMapSrc)
-const displacementMap = textureLoader.load(dispMapSrc)
-const aoMap = textureLoader.load(aoMapSrc)
+map.generateMipmaps = false
+// map.repeat.set(2, 2)
+// map.wrapS = THREE.RepeatWrapping
+// map.wrapT = THREE.RepeatWrapping
+// map.offset.set(-0.5, -0.5)
+// map.rotation = Math.PI / 6
+// map.center.set(0.5, 0.5)
+// const normalMap = textureLoader.load(normalMapSrc)
+// const displacementMap = textureLoader.load(dispMapSrc)
+// const aoMap = textureLoader.load(aoMapSrc)
 
 /**
  * Manhattan
@@ -43,26 +42,22 @@ const material = new THREE.MeshStandardMaterial({
 	// aoMapIntensity: 1,
 })
 
-material.onBeforeCompile = (shader) => {
-	console.log(shader.vertexShader)
-	console.log(shader.fragmentShader)
-}
-
 // const geometry = new THREE.SphereGeometry(0.75, 90, 90)
 const geometry = new THREE.BoxGeometry(1.25, 1.25, 1.25)
-geometry.attributes.uv2 = geometry.attributes.uv
-geometry.needsUpdate = true
+// const geometry = new THREE.PlaneGeometry(1.5, 1.5, 10, 10)
+// geometry.attributes.uv2 = geometry.attributes.uv
+// geometry.needsUpdate = true
 
-console.log(geometry)
+// console.log(geometry)
 const mesh = new THREE.Mesh(geometry, material)
-mesh.position.x = -1
+// mesh.position.x = -1
 scene.add(mesh)
 
 const planeGeometry = new THREE.PlaneGeometry(1.5, 1.5, 10, 10)
 const planeMaterial = new THREE.MeshStandardMaterial({ map })
 const plane = new THREE.Mesh(planeGeometry, planeMaterial)
 plane.position.x = 1
-scene.add(plane)
+// scene.add(plane)
 
 const light = new THREE.DirectionalLight(0xffffff, 0.75)
 light.position.set(5, 5, 10)
@@ -84,7 +79,7 @@ const sizes = {
  */
 const fov = 60
 const camera = new THREE.PerspectiveCamera(fov, sizes.width / sizes.height, 0.1)
-camera.position.set(0, 0, 4)
+camera.position.set(1.5, 0.5, 2)
 camera.lookAt(new THREE.Vector3(0, 2.5, 0))
 
 /**
